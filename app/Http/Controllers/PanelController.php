@@ -6,6 +6,7 @@ Use App\Mail\CorreoElectronico;
 Use Illuminate\Support\Facades\Mail;
 
 use Illuminate\Http\Request;
+use PhpParser\Node\Expr\Cast\String_;
 use PhpParser\Node\Stmt\TryCatch;
 
 class PanelController extends Controller
@@ -72,9 +73,6 @@ class PanelController extends Controller
     public function store(Request $request)
     {
 
-      
-    
-      
 
         $asignacionesParaGuardar = [];
 
@@ -89,12 +87,6 @@ class PanelController extends Controller
             ];
         }
 
-       
-        /* dd($asignacionesParaGuardar); */
-
-
-     
-
         // Eliminar asignaciones anteriores (ajusta según tu lógica)
         DB::table('propuesta_asignacions')->delete();
 
@@ -103,7 +95,6 @@ class PanelController extends Controller
 
             DB::insert("INSERT INTO propuesta_asignacions (id, id_usuarios, id_estacion,created_at, updated_at) VALUES (PROPUESTA_ASIGNACIONS_ID_SEQ.NEXTVAL, '$personaId', '$estacion', CURRENT_TIMESTAMP, NULL)"); 
             
-            /* $estacion */
         
         }
 
@@ -118,10 +109,17 @@ class PanelController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $request) 
     {
+     
        
     }
+
+
+
+
+
+
 
     /**
      * Show the form for editing the specified resource.
@@ -179,8 +177,40 @@ class PanelController extends Controller
 
 
 
-
-
-
     }
+
+
+    public function correoRechazo(Request $request) 
+    {
+        $query = DB::select("SELECT  
+                    ha.id_rol, 
+                    ha.id_persona,
+                    ha.id_usuarios,
+                    ha.id_jlaboral,   
+                    u.nombre,
+                    p.id_estacion, 
+                    jl.entrada || ' - ' || jl.salida AS jlaborals,        
+                    ha.created_at AS fecha_asignacion_anterior
+                    FROM propuesta_asignacions p
+                    JOIN usuarios u ON p.id_usuarios = u.id_usuario
+                    LEFT JOIN historico_asignacion ha ON ha.id_usuarios = p.id_usuarios
+                    JOIN jlaborals jl ON ha.id_jlaboral = jl.id       
+                    JOIN dias d ON jl.id_dias = d.id_dias
+                    WHERE  ha.id_estado=2");
+
+
+
+        dd($request);
+
+         /*  // Envio de Credenciales mamalonas
+                  Mail::to($request->email)
+                    ->send(new CorreoElectronico($request->all()));   */
+
+
+       
+    }
+
+
+
+
 }

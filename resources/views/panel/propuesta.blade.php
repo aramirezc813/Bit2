@@ -21,8 +21,7 @@ $areas = [
   <div class="alert alert-success text-center">{{ session('success') }}</div>
 @endif
 
-<form action="{{ route('panel.store') }}" method="POST">
-  @csrf
+
 
   <div class="tabs">
     <div class="tab-container">
@@ -75,10 +74,86 @@ $areas = [
       @endforeach
     </div>
 
-    <div class="text-center mt-4">
+    <div class="text-center mt-2 ">
       <button type="submit" class="btn btn-success">Aceptar Asignación Nueva</button>
-      <button type="button" class="btn btn-danger">Rechazar Asignación Nueva</button>
+
+      <br>
+
+      <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#createModal">
+            Rechazar Asignación Nueva
+        </button>
+       
     </div>
   </div>
-</form>
+
+
+
+<!-- INICIO Modal Rechazar Asignación -->
+<div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createModalLabel">Rechazo de Propuesta de Asignación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Formulario dentro del modal -->
+                <form action="{{ route('panel.correoRechazo',1) }}" method="POST">   
+                    @csrf
+                    
+                    <input type="hidden" name="asignacion_id" id="asignacion_id" value="{{ old('asignacion_id') }}">
+
+                    <div class="row g-3">
+                       
+
+                        <!-- Motivo del rechazo -->
+                        <div class="col-md-12">
+                            <label for="motivo" class="form-label txt-gray">
+                                <i class="fa-solid fa-comment-dots"></i> Motivo del rechazo:
+                            </label>
+                            <textarea name="motivo" id="motivo" rows="4" class="form-control" placeholder="Explique brevemente por qué se rechaza esta asignación..." required></textarea>
+                        </div>
+
+                        <!-- Botón de guardar -->
+                        <div class="col-12 text-center mt-3">
+                            <button type="submit" class="btn btn-danger">Guardar Rechazo</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>   
+<!-- FIN Modal Rechazar Asignación -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 @endsection
