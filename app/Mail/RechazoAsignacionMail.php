@@ -9,18 +9,17 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class CorreoElectronico extends Mailable
+class RechazoAsignacionMail extends Mailable
 {
-    use Queueable, SerializesModels;
-    public $subject = "Envío de Credenciales - Sistema Bit2";
+       use Queueable, SerializesModels;
 
+    public $motivo;
     public $datos;
 
-    /**
-     * Create a new message instance.
-     */
-    public function __construct($request){
-        $this->datos = $request;
+    public function __construct($motivo, $datos)
+    {
+        $this->motivo = $motivo;
+        $this->datos = $datos;
     }
 
     /**
@@ -29,7 +28,7 @@ class CorreoElectronico extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Envío de Credenciales - Sistema Bit2',
+            subject: 'Rechazo de Propuesta de Asignación  - Sistema Bit2',
            /*  cc: [ 'ati.svc@edomex.gob.mx',  'gonzalezvaldesjaneth@gmail.com'], // Copia a otros usuarios */
             bcc: ['aramirezc813@gmail.com'], // Copia oculta a otros usuarios
         );
@@ -55,9 +54,16 @@ class CorreoElectronico extends Mailable
         return [];
     }
 
-    public function build()
-    {
-        return $this->markdown('correo.bienvenido_md');
 
+
+     public function build()
+    {
+        return $this->markdown('correo.rechazo_md')
+                    ->subject('Rechazo de Propuesta de Asignación')
+                    ->with([
+                        'motivo' => $this->motivo,
+                        'datos' => $this->datos,
+                    ]);
     }
 }
+

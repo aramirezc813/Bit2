@@ -132,4 +132,4 @@ Route::post('/actualizarF', [PersonalController::class, 'actualizarF'])->name('p
 
 Route::get('/propuesta', [PanelController::class, 'propuesta'])->name('panel.propuesta');
 
-Route::get('/correoRechazo', [PanelController::class, 'correoRechazo'])->name('panel.correoRechazo');
+Route::post('/correoRechazo', [PanelController::class, 'correoRechazo'])->name('panel.correoRechazo');

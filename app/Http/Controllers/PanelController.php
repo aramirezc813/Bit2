@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
 Use App\Mail\CorreoElectronico;
+Use App\Mail\RechazoAsignacionMail;
 Use Illuminate\Support\Facades\Mail;
 
 use Illuminate\Http\Request;
@@ -183,14 +184,9 @@ class PanelController extends Controller
     public function correoRechazo(Request $request) 
     {
         $query = DB::select("SELECT  
-                    ha.id_rol, 
-                    ha.id_persona,
-                    ha.id_usuarios,
-                    ha.id_jlaboral,   
                     u.nombre,
                     p.id_estacion, 
-                    jl.entrada || ' - ' || jl.salida AS jlaborals,        
-                    ha.created_at AS fecha_asignacion_anterior
+                    jl.entrada || ' - ' || jl.salida AS jlaborals        
                     FROM propuesta_asignacions p
                     JOIN usuarios u ON p.id_usuarios = u.id_usuario
                     LEFT JOIN historico_asignacion ha ON ha.id_usuarios = p.id_usuarios
@@ -200,12 +196,14 @@ class PanelController extends Controller
 
 
 
-        dd($request);
+           // Envio de Credenciales mamalonas
+                  Mail::to('aramirezc813@gmail.com')//este dato se va a cambiar por el nombre de coordinación
+                    ->send(new RechazoAsignacionMail($request->motivo, $query));  
 
-         /*  // Envio de Credenciales mamalonas
-                  Mail::to($request->email)
-                    ->send(new CorreoElectronico($request->all()));   */
+             
 
+
+    return back()->with('success', 'Correo de rechazo enviado correctamente.');
 
        
     }
