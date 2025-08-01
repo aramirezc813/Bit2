@@ -21,7 +21,7 @@
                     <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                     Panel
                 </a>    
-                <a class="nav-link" href="{{route('panel.index')}}">
+                <a class="nav-link" href="{{route('panel.propuesta')}}">
                     <div class="sb-nav-link-icon"><i class="fa-solid fa-border-none"></i></div>
                     Propuesta 
                 </a>   

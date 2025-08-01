@@ -86,14 +86,7 @@
                             <tr id="tablaneutro">
                                 <td>{{ $equipo->id_equipo }}</td>
                                 <td>
-                                    <!-- Botón de editar -->
-                                   {{--  <button type="button" title ='Editar'class="btn btn-btn btn-primary"><i class="fa-solid fa-pen-to-square"></i></button>  --}}
-
-
-                                    
-                                  {{--   <button type="button" title="Ver" class="btn btn-warning" data-toggle="modal" data-target="#verModal-{{$equipo->id_equipo}}">
-                                        <i class="fa-solid fa-eye"></i>
-                                    </button> --}}
+                                
 
                                     <button type="button" title="Ver" class="btn btn-warning" data-toggle="modal" data-target="#verModal-{{$equipo->id_equipo}}" data-id-equipo="{{$equipo->id_equipo}}">
                                         <i class="fa-solid fa-eye"></i>
@@ -236,6 +229,10 @@
                     <div class="col-md-12 mb-2 text-center">
                         <br>
                         <button type="submit" class="btn btn-success">Guardar</button>
+                    </div>
+                     <div class="col-md-12 mb-2 text-lefr">
+                        <br>
+                        <button type="submit" class="btn btn-success">Guardarxdd</button>
                     </div>
 
                     

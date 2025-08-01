@@ -113,7 +113,7 @@ $areas = [
                 ondragstart="onDragStart(event);"
                 aria-grabbed="true"
                 data-nombre="{{ $persona->nombre }}"
-                data-id="{{ $persona->id_persona }}"
+                data-id="{{ $persona->id_usuarios }}"
                 data-jlaboral="{{ $persona->jlaborals }}"
                 data-dias="{{ $persona->dias }}"
                 @if ($asignacion)

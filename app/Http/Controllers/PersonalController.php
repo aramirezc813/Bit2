@@ -40,6 +40,7 @@ class PersonalController extends Controller
         p.id_hdescanso,
         p.id_usuarios,
         u.nombre,
+        
     
         e.descripcion AS estacion,
         est.descripcion AS estado,       
@@ -128,7 +129,7 @@ class PersonalController extends Controller
      */
     public function store(Request $request)
     {
-        
+       
        
            $validator = Validator::make(
             $request->all(), 
@@ -198,7 +199,7 @@ class PersonalController extends Controller
         } catch (\Throwable $th) {
             $message = 'Hubo un problema al guardar el registro: ';
             return redirect()->route('personal.index')->with('error', $message);   
-        }
+        } 
           
      
     } 
@@ -306,7 +307,7 @@ class PersonalController extends Controller
         p.id_hcomida, 
         p.id_hdescanso,
         u.nombre,
-    
+        /* r.name, */
         e.descripcion AS estacion,
         est.descripcion AS estado,       
         jl.entrada || '-' || jl.salida AS jlaborals,      
@@ -314,6 +315,7 @@ class PersonalController extends Controller
         hd.entrada || '-' || hd.salida AS hdescansos
 
         FROM historico_asignacion p
+        /* JOIN roles r ON p.id_rol=r.id */
         JOIN usuarios u ON p.id_usuarios = u.id_usuario
         JOIN estaciones e ON p.id_estacion = e.id
         JOIN estados est ON p.id_estado = est.id_estado
@@ -331,13 +333,37 @@ class PersonalController extends Controller
             $pdfu->set_paper('a4', 'landscape');
             $pdfu->render();           
             return $pdfu->stream();     
- 
-          
-           
-       
-
-   
+    
    
 }
+
+
+public function actualizarF(Request $request)
+    {
+
+        try {
+            
+              $personal=new Personal();
+             $foto=$personal->hanbleUploadImage($request->file('imagenA')); 
+
+              
+          
+
+            DB::update("update usuarios SET foto='$foto' WHERE id_usuario=$request->id_usuarios");
+           
+             
+            $message='Actualización Correcta';
+            return redirect()->route('personal.index')->with('success',$message);    
+
+        } catch (\Throwable $th) {
+             $message = 'Hubo un problema al guardar el registro: ';
+            return redirect()->route('personal.index')->with('error', $message);   
+        }  
+          
+     
+    } 
+
+
+
     
 }

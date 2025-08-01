@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
+Use App\Mail\CorreoElectronico;
+Use Illuminate\Support\Facades\Mail;
 
 use Illuminate\Http\Request;
 use PhpParser\Node\Stmt\TryCatch;
@@ -19,6 +21,7 @@ class PanelController extends Controller
          try {
             $query = DB::select("SELECT  p.id_rol, 
                     p.id_persona,
+                    p.id_usuarios,
                     p.id_estacion,
                     p.id_estado,
                     u.foto,
@@ -70,78 +73,54 @@ class PanelController extends Controller
     {
 
       
-         dd($request->input('asignaciones')); 
-        /*   $request->validate([
-        'asignaciones' => 'required|array',
-    ]); */
+    
+      
 
-    $asignacionesParaGuardar = [];
+        $asignacionesParaGuardar = [];
 
-    foreach ($request->asignaciones as $asignacion) {
-        [$personaId, $estacion, $area] = explode('|', $asignacion);
+         foreach ($request->asignaciones as $asignacion) {
+            [$personaId, $estacion, $area] = explode('|', $asignacion);
 
-        $asignacionesParaGuardar[] = [
-            'persona_id' => $personaId,
-            'estacion' => $estacion,
-            'area' => $area,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ];
-    }
+            $asignacionesParaGuardar[] = [
+                'persona_id' => $personaId,
+                'estacion' =>  $estacion  ,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
 
-    // Aquí puedes mostrar qué vas a guardar:
-    dd($asignacionesParaGuardar);
+       
+        /* dd($asignacionesParaGuardar); */
+
+
+     
+
+        // Eliminar asignaciones anteriores (ajusta según tu lógica)
+        DB::table('propuesta_asignacions')->delete();
+
+        foreach ($request->asignaciones as $asignacion) {
+            [$personaId, $estacion] = explode('|', $asignacion);
+
+            DB::insert("INSERT INTO propuesta_asignacions (id, id_usuarios, id_estacion,created_at, updated_at) VALUES (PROPUESTA_ASIGNACIONS_ID_SEQ.NEXTVAL, '$personaId', '$estacion', CURRENT_TIMESTAMP, NULL)"); 
+            
+            /* $estacion */
+        
+        }
+
+    return redirect()->route('panel.index')->with('success', 'Asignaciones guardadas correctamente.');
+} 
+
+
 
 
     
-
-
-
-
-
-       /*  $asignaciones = $request->input('asignaciones'); */
-
-        // Procesa cada asignación y guarda en la base de datos o lo que necesites
-        /* foreach ($asignaciones as $asignacion) {
-            // Lógica para guardar las asignaciones en la base de datos
-            // $asignacion contiene el nombre del empleado asignado a una celda específica
-        } */
-
-/* 
-        {
-    $request->validate([
-        'asignaciones' => 'required|array',
-    ]);
-
-    // Eliminar asignaciones anteriores (ajusta según tu lógica)
-    DB::table('asignacions')->delete();
-
-    foreach ($request->asignaciones as $asignacion) {
-        [$personaId, $estacion, $area] = explode('|', $asignacion);
-
-        DB::table('asignacions')->insert([
-            'persona_id' => $personaId,
-            'estacion' => $estacion,
-            'area' => $area,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-    }
-
-    return redirect()->route('panel.index')->with('success', 'Asignaciones guardadas correctamente.');
-} */
-
-
-
-
-    }
 
     /**
      * Display the specified resource.
      */
     public function show(string $id)
     {
-        //
+       
     }
 
     /**
@@ -168,5 +147,40 @@ class PanelController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function propuesta()
+    {
+       
+
+        try {
+            $query = DB::select("SELECT  
+                    ha.id_rol, 
+                    ha.id_persona,
+                    ha.id_usuarios,
+                    ha.id_jlaboral,   
+                    u.nombre,
+                    p.id_estacion, 
+                    jl.entrada || ' - ' || jl.salida AS jlaborals,        
+                    ha.created_at AS fecha_asignacion_anterior
+                    FROM propuesta_asignacions p
+                    JOIN usuarios u ON p.id_usuarios = u.id_usuario
+                    LEFT JOIN historico_asignacion ha ON ha.id_usuarios = p.id_usuarios
+                    JOIN jlaborals jl ON ha.id_jlaboral = jl.id       
+                    JOIN dias d ON jl.id_dias = d.id_dias
+                    WHERE  ha.id_estado=2");
+                
+            
+        } catch (\Throwable $th) {
+            return redirect()->route('panel.index')->with('success', 'No existe una Propuesta Previa para visualizar.'); 
+        }
+
+    return view('panel.propuesta',['asignaciones'=>$query]);
+
+
+
+
+
+
     }
 }

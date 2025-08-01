@@ -151,14 +151,9 @@
                             @endif
 
                             <button type="button"  title="Ver " class="btn btn-warning"data-toggle="modal" data-target="#verModal-{{$persona->id_persona}}"><i class="fa-solid fa-eye"></i></button>
-                            
-                         {{--    <form action="{{ route('createpassword', ['personal' => $persona->id_persona]) }}" method="GET">   
-                               @csrf
-                                <button type="submit" title='Contraseñas' class="btn btn-btn btn-primary"><i class="fa-solid fa-key"></i></button>
+                       
 
-                            </form>  --}}
-
-                            <button type="button"  title='Contraseñas' class="btn btn-btn btn-primary" data-toggle="modal" data-target="#verModal-{{$persona->id_persona}}"><i class="fa-solid fa-key"></i></button>
+                            <button type="button"  title='Contraseñas' class="btn btn-btn btn-primary" data-toggle="modal" data-target="#PwdModal-{{$persona->id_usuarios}}"><i class="fa-solid fa-key"></i></button>
 
 
                           </div>
@@ -192,37 +187,98 @@
 
                  <!-- Modal  mostrar personal -->
                 <div class="modal fade" id="verModal-{{$persona->id_persona}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Detalles del Personal</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                        </div>
-                        <div class="modal-body">
-                        <div class="row mb-3" >
-                           <label for=""><span class="fw-bolder"> Nombre: </span>{{$persona->nombre}}</label> 
-                        </div>
-                        <div class="row mb-3">
-                            <div>
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                            
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Detalles del Personal</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
                                 
-                                @if($persona->foto != null )
-                                <img src="{{url('Storage/personal/'.$persona->foto)}}"  class="img-fluid .img-thumbnail" alt="xddd">
-                                
-                                @else
+                                <div class="modal-body">
+                                    <div class="row mb-3">
+                                        <label><span class="fw-bolder">Nombre:</span> {{$persona->nombre}}</label>
+                                    </div>
+                                    
+                                    <div class="row mb-3 text-center">
+                                        <div class="col">
+                                            @if($persona->foto)
+                                                <img src="{{ url('Storage/personal/'.$persona->foto) }}" class="img-fluid img-thumbnail" alt="Foto de {{$persona->nombre}}">
+                                            @else
+                                                <p>Sin fotografía registrada</p>
+                                            @endif
+                                        </div>
+                                    </div>
 
-                                @endif
+                                    
+                                        <div class="modal-footer">
+
+                                            <form action="{{ route('personal.actualizarF') }}" method="post" enctype="multipart/form-data">
+                                                @csrf
+                                                <input type="hidden" name="id_usuarios" value="{{ $persona->id_usuarios }}">
+                                                
+                                                <input type="file" name="imagenA" id="imagenA" accept="image/*" required class="form-control">
+                                                
+                                                <div id="vista-previa" class="text-center mb-3">
+                                                    <img id="imagen-previa" src="#" alt="Vista previa" style="max-width: 200px; display: none;">
+                                                </div>
+
+                                                <button type="submit" class="btn btn-warning">Actualizar Fotografía</button>
+                                            </form> 
+
+                                        </div>
+                                    
+                                </div>
+
                             </div>
                         </div>
-                        </div>
-                        <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        
+                    </div>
+
+
+
+                      <!-- Modal  Credenciales personal -->
+                <div class="modal fade" id="PwdModal-{{$persona->id_usuarios}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                            
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Detalles del Personal</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                
+                                <div class="modal-body">
+                                    <div class="row mb-3">
+                                        <label><span class="fw-bolder">Nombre:</span> {{$persona->nombre}}</label>
+                                    </div>
+                                    
+                                    
+                                        <div class="modal-footer">
+
+                                            <form action="{{ route('personal.actualizarF') }}" method="post" enctype="multipart/form-data">
+                                                @csrf
+                                                <input type="hidden" name="id_usuarios" value="{{ $persona->id_usuarios }}">
+                                                
+                                                <input type="file" name="imagenA" id="imagenA" accept="image/*" required class="form-control">
+                                                
+                                                <div id="vista-previa" class="text-center mb-3">
+                                                    <img id="imagen-previa" src="#" alt="Vista previa" style="max-width: 200px; display: none;">
+                                                </div>
+
+                                                <button type="submit" class="btn btn-warning">Actualizar Fotografía</button>
+                                            </form> 
+
+                                        </div>
+                                    
+                                </div>
+
+                            </div>
                         </div>
                     </div>
-                    </div>
-                </div> 
+
                         
 
                 </tr>

@@ -126,3 +126,7 @@ Route::controller(PersonalController::class)->group(function(){
 
 
 Route::post('/vistaformato', [PersonalController::class, 'Vistaformato'])->name('vistaformato');
+
+ Route::post('/actualizarF', [PersonalController::class, 'actualizarF'])->name('personal.actualizarF'); 
+
+Route::get('/propuesta', [PanelController::class, 'propuesta'])->name('panel.propuesta');
