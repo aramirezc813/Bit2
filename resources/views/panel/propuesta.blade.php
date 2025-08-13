@@ -77,7 +77,7 @@ $areas = [
     <div class="text-center mt-2 ">
       <button type="submit" class="btn btn-success">Aceptar Asignación Nueva</button>
 
-      <br>
+     
 
       <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#createModal">
             Rechazar Asignación Nueva
